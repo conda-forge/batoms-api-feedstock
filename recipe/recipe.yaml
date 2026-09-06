@@ -1,0 +1,61 @@
+schema_version: 1
+
+context:
+  name: batoms-api
+  version: "0.1.4"
+
+package:
+  name: ${{ name|lower }}
+  version: ${{ version }}
+
+source:
+  url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/batoms_api-${{ version }}.tar.gz
+  sha256: e6b44f09cedcb1a6d468a137d5c2ded42b27997924b1c280d69ccffbe31f8795
+
+build:
+  number: 2
+  noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv
+  python:
+    entry_points:
+      - batoms=batoms_api.cli.main:main
+
+requirements:
+  host:
+    - pip
+    - python ${{ python_min }}.*
+    - setuptools
+  run:
+    - python >=${{ python_min }}
+    - ase
+
+tests:
+  - python:
+      imports:
+        - batoms_api
+        - batoms_api.cli
+      pip_check: true
+      python_version: ${{ python_min }}
+  - requirements:
+      run:
+        - pip
+        - python ${{ python_min }}.*
+    script:
+      - batoms --help
+
+about:
+  license: GPL-3.0-or-later
+  license_file: LICENSE
+  summary: Blendase is a Python package for drawing and rendering atoms, molecules and crystal using blender.
+  description: |
+    batoms_api is a API for Beautiful Atoms package. Beautiful Atoms is
+    a Python package for editing and rendering atoms and molecules
+    objects using blender. A Python interface that allows for automating
+    workflows.
+  homepage: https://github.com/superstar54/beautiful-atoms-api
+  repository: https://github.com/superstar54/beautiful-atoms-api
+  documentation: https://github.com/superstar54/beautiful-atoms-api
+
+extra:
+  recipe-maintainers:
+    - jan-janssen
